@@ -1,4 +1,7 @@
 <?php
+
+$config = parse_ini_file(__DIR__ . '/facebook-config.ini', true);
+
 $params = array_merge(
     require(__DIR__ . '/../../common/config/params.php'),
     require(__DIR__ . '/../../common/config/params-local.php'),
@@ -47,6 +50,19 @@ return [
             'showScriptName' => false,
             'rules' => [
             ],
+        ],
+
+        'authClientCollection' => [
+          'class' => 'yii\authclient\Collection',
+          'clients' => [
+            'facebook' => [
+              'class' => 'yii\authclient\clients\Facebook',
+              'authUrl' => 'https://www.facebook.com/dialog/oauth?display=popup',
+              'clientId' => $config['OAUTH_CLIENT_ID'],
+              'clientSecret' => $config['OAUTH_SECRET_ID'],
+              'attributeNames' => ['name', 'email'],
+            ],
+          ],
         ],
 
     ],

@@ -28,11 +28,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div style="color:#999;margin:1em 0">
                     If you forgot your password you can <?= Html::a('reset it', ['site/request-password-reset']) ?>.
                 </div>
-
-                <div class="form-group">
+                
+                <div class="row">
+                  <div class="col-xs-6 form-group">
                     <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                  </div>
+                  <div class="col-xs-6 form-group">
+                    <?= yii\authclient\widgets\AuthChoice::widget([
+                      'baseAuthUrl' => ['site/auth']
+                      ]) ?>
+                      <lebel>Login with Facebook</label>
+                  </div>
                 </div>
-
             <?php ActiveForm::end(); ?>
         </div>
     </div>

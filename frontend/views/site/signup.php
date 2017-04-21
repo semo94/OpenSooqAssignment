@@ -24,9 +24,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= $form->field($model, 'email') ?>
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
-
-                <div class="form-group">
-                    <?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
+                <div class="row">
+                  <div class="col-xs-6 form-group">
+                      <?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
+                  </div>
+                  <div class="col-xs-6 form-group">
+                    <?= yii\authclient\widgets\AuthChoice::widget([
+                      'baseAuthUrl' => ['site/auth']
+                      ]) ?>
+                      <lebel>Signup with Facebook</label>
+                  </div>
                 </div>
 
             <?php ActiveForm::end(); ?>

@@ -55,4 +55,14 @@ class SignupForm extends Model
 
         return $user->save() ? $user : null;
     }
+
+    public function signupFB($userData)
+    {
+      $user = new User();
+      $user->username = $userData['name'];
+      $user->email = $userData['email'];
+      $user->setPassword($userData['id']);
+      $user->generateAuthKey();
+      return $user->save() ? $user : null;
+    }
 }

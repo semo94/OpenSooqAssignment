@@ -7,6 +7,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\helpers\VarDumper;
 use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
@@ -61,6 +62,10 @@ class SiteController extends Controller
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
+            'auth' => [
+            'class' => 'yii\authclient\AuthAction',
+            'successCallback' => [$this, 'oAuthSuccess'],
             ],
         ];
     }
@@ -209,5 +214,27 @@ class SiteController extends Controller
         return $this->render('resetPassword', [
             'model' => $model,
         ]);
+    }
+
+    /**
+    * This function will be triggered when user is successfuly authenticated using some oAuth client.
+    *
+    * @param yii\authclient\ClientInterface $client
+    * @return boolean|yii\web\Response
+    */
+    public function oAuthSuccess($client) {
+
+      // get user data from client
+      //$model = SignupForm;
+      $userAttributes = $client->getUserAttributes();
+      //var_dump($userAttributes); die;
+      $model = new LoginForm();
+      $model->username = $userAttributes['name'];
+      $model->password = $userAttributes['id'];
+      if (!$model->login()) {
+        $model = new SignupForm();
+        $user = $model->signupFB($userAttributes);
+        Yii::$app->getUser()->login($user);
+        }
     }
 }

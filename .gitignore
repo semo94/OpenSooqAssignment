@@ -3,6 +3,9 @@
 /yii_test
 /yii_test.bat
 
+# facebook config
+/frontend/config/facebook-config.ini
+
 # phpstorm project files
 .idea
 
