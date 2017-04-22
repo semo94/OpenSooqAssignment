@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `post`.
  */
-class m170422_103843_create_post_table extends Migration
+class m170422_103842_create_post_table extends Migration
 {
     /**
      * @inheritdoc

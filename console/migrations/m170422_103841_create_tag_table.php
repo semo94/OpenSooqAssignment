@@ -18,36 +18,53 @@ class m170422_103841_create_tag_table extends Migration
         }
         $this->createTable('tag', [
             'id' => $this->primaryKey(),
-            'name' => $this->string(100)->notNull()->unique()
+            'category_id' => $this->integer()->notNull(),
+            'name' => $this->string(100)->notNull()
         ], $tableOptions);
 
-        $this->insert('tag',['name'=>'toyota']
+        $this->addForeignKey('fk_tag_category_id',
+         'tag',
+         'category_id',
+         'category',
+         'id',
+         'RESTRICT',
+         'CASCADE');
+
+        $this->insert('tag',['name'=>'toyota','category_id'=>2]
         );
-        $this->insert('tag',['name'=>'honda']
+        $this->insert('tag',['name'=>'honda','category_id'=>2]
         );
-        $this->insert('tag',['name'=>'gmc']
+        $this->insert('tag',['name'=>'gmc','category_id'=>2]
         );
-        $this->insert('tag',['name'=>'automatic']
+        $this->insert('tag',['name'=>'automatic','category_id'=>2]
         );
-        $this->insert('tag',['name'=>'manual']
+        $this->insert('tag',['name'=>'manual','category_id'=>2]
         );
-        $this->insert('tag',['name'=>'hybrid']
+        $this->insert('tag',['name'=>'hybrid','category_id'=>2]
         );
-        $this->insert('tag',['name'=>'gas']
+        $this->insert('tag',['name'=>'gas','category_id'=>2]
         );
-        $this->insert('tag',['name'=>'iphone']
+        $this->insert('tag',['name'=>'iphone','category_id'=>1]
         );
-        $this->insert('tag',['name'=>'galaxy s']
+        $this->insert('tag',['name'=>'galaxy s','category_id'=>1]
         );
-        $this->insert('tag',['name'=>'galaxy note']
+        $this->insert('tag',['name'=>'galaxy note','category_id'=>1]
         );
-        $this->insert('tag',['name'=>'black']
+        $this->insert('tag',['name'=>'black','category_id'=>1]
         );
-        $this->insert('tag',['name'=>'white']
+        $this->insert('tag',['name'=>'white','category_id'=>1]
         );
-        $this->insert('tag',['name'=>'ipad']
+        $this->insert('tag',['name'=>'black','category_id'=>2]
         );
-        $this->insert('tag',['name'=>'galaxy tab']
+        $this->insert('tag',['name'=>'white','category_id'=>2]
+        );
+        $this->insert('tag',['name'=>'black','category_id'=>3]
+        );
+        $this->insert('tag',['name'=>'white','category_id'=>3]
+        );
+        $this->insert('tag',['name'=>'ipad','category_id'=>3]
+        );
+        $this->insert('tag',['name'=>'galaxy tab','category_id'=>3]
         );
     }
 
