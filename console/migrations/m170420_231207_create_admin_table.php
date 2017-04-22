@@ -12,15 +12,19 @@ class m170420_231207_create_admin_table extends Migration
      */
     public function up()
     {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
+        }
         $this->createTable('admin', [
             'id' => $this->primaryKey(),
             'username' => $this->string(64)->notNull()->unique(),
             'password_hash' => $this->string(255)->notNull(),
             'auth_key' => $this->string(255)->notNull(),
             'status' => $this->smallInteger()->notNull()->defaultValue(0),
-            'updated_at' => 'timestamp on update current_timestamp',
+            'updated_at' => 'timestamp ON UPDATE CURRENT_TIMESTAMP',
             'created_at' => 'timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP'
-        ]);
+        ], $tableOptions);
 
         $this->insert('admin', array(
          'username'=>'admin',
