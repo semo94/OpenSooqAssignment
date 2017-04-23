@@ -101,10 +101,14 @@ class PostController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
         if(Yii::$app->user->isGuest){
-             $this->redirect('../site/login');
+            $this->redirect('../site/login');
          } else if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $request = Yii::$app->request->post('Post');
+            if(sizeof($request['tags'])>0){
+              PostTag::deleteAll('post_id = :postID', [':postID' => $model->id]);
+            }
+            $model->insertTags($request);
             return $this->redirect(['view', 'id' => $model->id]);
          } else {
               return $this->render('update', [
@@ -123,10 +127,12 @@ class PostController extends Controller
     {
         if(Yii::$app->user->isGuest){
             $this->redirect('../site/login');
+        } else {
+            $model = $this->findModel($id);
+            PostTag::deleteAll('post_id = :postID', [':postID' => $model->id]);
+            $model->delete();
+            return $this->redirect(['index']);
         }
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
     }
 
     /**
