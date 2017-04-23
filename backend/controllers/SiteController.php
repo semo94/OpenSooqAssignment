@@ -6,6 +6,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\AdminLoginForm;
+use backend\models\Post;
 
 /**
  * Site controller
@@ -60,6 +61,12 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        $model = new Post();
+        if($duplicates = $model->getDublicated()) {
+          return $this->render('index', [
+            'duplicates' => $duplicates
+	        ]);
+        }
         return $this->render('index');
     }
 
