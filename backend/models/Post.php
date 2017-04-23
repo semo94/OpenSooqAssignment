@@ -108,4 +108,14 @@ class Post extends \yii\db\ActiveRecord
       ]);
       return $provider;
     }
+
+    public function deleteOldPosts(){
+      $query = 'delete from post_tag where post_id in (SELECT id from post where created_at < ADDDATE(NOW(),-3));
+                delete from post where created_at < ADDDATE(NOW(),-3);';
+      $command = Yii::$app->db->createCommand($query);
+      $command->execute();
+      return $command;
+      //var_dump($command->execute());die;
+
+    }
 }
