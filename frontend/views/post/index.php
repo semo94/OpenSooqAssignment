@@ -8,16 +8,21 @@ use yii\grid\ActionColumn;
 /* @var $searchModel frontend\models\PostSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Posts';
+$this->title = 'Posts archive';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="post-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <h2><?= Html::encode($this->title) ?></h2>
+    <?php  //echo $this->render('_search', ['model' => $searchModel]);
+      //var_dump($this->params['breadcrumbs'][]);die;
+     ?>
 
     <p>
-        <?= Html::a('Create Post', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Yii::$app->user->isGuest ?
+         Html::a('please login first to start posting your ads..',['site/login'])
+         : Html::a('Write Post', ['create'], ['class' => 'btn btn-success'])
+         ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

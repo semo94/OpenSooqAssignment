@@ -35,17 +35,14 @@ class PostController extends Controller
      * @return mixed
      */
     public function actionIndex()
-    {
-        if(Yii::$app->user->isGuest){
-            $this->redirect('../site/login');
-        } else {
-            $searchModel = new PostSearch();
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-            return $this->render('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);
-        }
+    {   $model = new Post();
+        $searchModel = new PostSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'model' => $model
+        ]);
     }
 
     /**
@@ -81,7 +78,6 @@ class PostController extends Controller
         else if ($model->load(Yii::$app->request->post()) ) {
           $request = Yii::$app->request->post('Post');
           if($model->insertPost($request)){
-            //$model->tagsList = 'batata';
             return $this->redirect(['view', 'id' => $model->id]);
           }
         } else {
@@ -105,7 +101,7 @@ class PostController extends Controller
             $this->redirect('../site/login');
          } else if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $request = Yii::$app->request->post('Post');
-            if(sizeof($request['tags'])>0){
+            if(is_array($request['tags'])){
               PostTag::deleteAll('post_id = :postID', [':postID' => $model->id]);
             }
             $model->insertTags($request);

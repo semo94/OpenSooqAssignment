@@ -78,14 +78,16 @@ class Post extends \yii\db\ActiveRecord
 
     public function insertTags($request)
     {
-
-      foreach ($request['tags'] as $tag_id) {
-          $newTag = new PostTag();
-          $newTag->post_id = $this->id;
-          $newTag->tag_id = $tag_id;
-          $newTag->save();
+      if(is_array($request['tags'])) {
+        foreach ($request['tags'] as $tag_id) {
+            $newTag = new PostTag();
+            $newTag->post_id = $this->id;
+            $newTag->tag_id = $tag_id;
+            $newTag->save();
+        }
+        return $newTag;
       }
-      return $newTag;
+      return true;
     }
 
     /**
