@@ -3,7 +3,9 @@
 namespace frontend\models;
 
 use Yii;
+use yii\db\Query;
 use frontend\models\PostTag;
+use yii\data\SqlDataProvider;
 
 /**
  * This is the model class for table "post".
@@ -23,6 +25,7 @@ use frontend\models\PostTag;
  */
 class Post extends \yii\db\ActiveRecord
 {
+    public $tagsList;
     /**
      * @inheritdoc
      */
@@ -37,6 +40,7 @@ class Post extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['tagsList'],'safe'],
             [['title', 'user_id', 'category_id'], 'required'],
             [['user_id', 'category_id'], 'integer'],
             [['updated_at', 'created_at'], 'safe'],
@@ -59,6 +63,7 @@ class Post extends \yii\db\ActiveRecord
             'category_id' => 'Category ID',
             'updated_at' => 'Updated At',
             'created_at' => 'Created At',
+
         ];
     }
 
@@ -77,8 +82,9 @@ class Post extends \yii\db\ActiveRecord
           $newTag = new PostTag();
           $newTag->post_id = $this->id;
           $newTag->tag_id = $tag_id;
-          return $newTag->save() ? true : false;
+          $newTag->save();
       }
+      return true;
     }
 
     /**
@@ -121,5 +127,26 @@ class Post extends \yii\db\ActiveRecord
     public function getAllTags()
     {
         return Tag::find()->select('name')->indexBy('id')->column();
+    }
+
+    public function getTagsByPostID($id)
+    {
+        $sql = 'select tag.name
+              from tag inner join post_tag
+              on post_tag.tag_id = id
+              where post_tag.post_id = :ID';
+        $dataProvider = new SqlDataProvider([
+             'sql' => $sql,
+             'params' => [':ID' => $id],
+             'pagination' => [
+                  'pageSize' => 20,
+             ],
+           ]);
+
+        $tags = $dataProvider->getModels();
+        $tags_list = implode(' , ', array_map(function ($entry) {
+          return $entry['name'];
+        }, $tags));
+        return $tags_list;
     }
 }

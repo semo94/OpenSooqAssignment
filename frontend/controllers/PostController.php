@@ -36,13 +36,16 @@ class PostController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new PostSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        if(Yii::$app->user->isGuest){
+            $this->redirect('../site/login');
+        } else {
+            $searchModel = new PostSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
     }
 
     /**
@@ -52,9 +55,15 @@ class PostController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        $model = new Post();
+        if(Yii::$app->user->isGuest){
+            $this->redirect('../site/login');
+
+        } else {
+           return $this->render('view', [
+               'model' => $this->findModel($id),
+           ]);
+        }
     }
 
     /**
@@ -66,12 +75,13 @@ class PostController extends Controller
     {
         $model = new Post();
 
-         if(Yii::$app->user->isGuest){
+        if(Yii::$app->user->isGuest){
              $this->redirect('../site/login');
          }
         else if ($model->load(Yii::$app->request->post()) ) {
           $request = Yii::$app->request->post('Post');
           if($model->insertPost($request)){
+            //$model->tagsList = 'batata';
             return $this->redirect(['view', 'id' => $model->id]);
           }
         } else {
@@ -92,13 +102,15 @@ class PostController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if(Yii::$app->user->isGuest){
+             $this->redirect('../site/login');
+         } else if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
+         } else {
+              return $this->render('update', [
+                  'model' => $model,
+              ]);
+          }
     }
 
     /**
@@ -109,6 +121,9 @@ class PostController extends Controller
      */
     public function actionDelete($id)
     {
+        if(Yii::$app->user->isGuest){
+            $this->redirect('../site/login');
+        }
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

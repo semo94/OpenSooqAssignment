@@ -1,8 +1,9 @@
 <?php
 
+//use yii\;
 use yii\helpers\Html;
 use yii\grid\GridView;
-
+use yii\grid\ActionColumn;
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\PostSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -23,16 +24,26 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
             'title',
             'description',
-            'user_id',
-            'category_id',
-            // 'updated_at',
-            // 'created_at',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'attribute' => 'category',
+                'format' => 'raw',
+                'value' => function ($model) {
+                        return '<div>'.$model->category['name'].'</div>';
+                },
+            ],
+            [
+            'class' => 'yii\grid\ActionColumn',
+            'visibleButtons' => [
+                'update' => function ($model, $key, $index) {
+                    return $model->user_id === Yii::$app->user->getId() ? true : false;
+                 },
+                 'delete' => function ($model, $key, $index) {
+                     return $model->user_id === Yii::$app->user->getId() ? true : false;
+                  }
+             ]
+          ]
         ],
     ]); ?>
 </div>
