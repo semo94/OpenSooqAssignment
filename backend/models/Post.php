@@ -114,8 +114,6 @@ class Post extends \yii\db\ActiveRecord
                 delete from post where created_at < ADDDATE(NOW(),-3);';
       $command = Yii::$app->db->createCommand($query);
       $command->execute();
-      return $command;
-      //var_dump($command->execute());die;
 
     }
 }

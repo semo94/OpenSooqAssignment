@@ -12,15 +12,9 @@ class DeleteController extends Controller {
 
     public function actionIndex() {
       $model = new Post();
-      if($model->deleteOldPosts()){
-        echo 'deleted successfuly';
-      } else {
-        echo 'no old post to delete!';
-      }
+      $model->deleteOldPosts()
+      echo 'delete task has been completed successfully';
     }
-
-
-
 }
 
 
